@@ -37,7 +37,8 @@ NeptuneBool neptuneWindowShouldClose(NeptuneWindow* window) {
 }
 
 void neptuneSwapBuffers(NeptuneWindow* window) {
-
+  assert(window != NULL);
+  _NEPTUNE_REQUIRE_INIT;
 
   platformSwapBuffers(window);
 }

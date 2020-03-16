@@ -47,34 +47,57 @@
 
 @end
 
+@interface NeptuneCocoaWindow : NSWindow
+@end
 
+@implementation NeptuneCocoaWindow
+- (BOOL) canBecomeKeyWindow {
+  return YES;
+}
 
+- (BOOL) canBecomeMainWindow {
+  return YES;
+}
+@end
 
+void platformCreateGLContext(NeptuneWindow* window) {
+  assert(window != NULL);
+  _NEPTUNE_REQUIRE_INIT;
 
+  platformCreateGLPixelFormat(window);
 
+  window->context.object = [[NSOpenGLContext alloc] initWithFormat:window->context.pixelFormat
+                                      shareContext: nil];
 
+  [window->context.object setView: window->ns.view];
+}
 
+void platformCreateGLPixelFormat(NeptuneWindow* window) {
+  assert(window != NULL);
+  _NEPTUNE_REQUIRE_INIT;
 
+  //Thanks to https://developer.apple.com/documentation/appkit/nsopenglpixelformat/1436219-initwithattributes?language=objc
+  //for this simple opengl pixelformat
+  NSOpenGLPixelFormatAttribute attrs[] =
+  {
+      NSOpenGLPFADoubleBuffer,
+      NSOpenGLPFADepthSize, 32,
+      0
+  };
 
+  NSOpenGLPixelFormat* pixFmt = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
 
+  if(pixFmt == nil) {
 
+  }
 
+  window->context.pixelFormat = pixFmt;
 
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void platformMakeContextCurrent(NeptuneWindow* window) {
+  [window->context.object makeCurrentContext];
+}
 
 
 //Platform specific method for obtaining properties of a women
@@ -104,7 +127,7 @@ void platformCreateWindow(NeptuneWindow* window) {
   NSRect frame = NSMakeRect(0.0, 0.0, window->width, window->height);
 
   //Create the window variable
-  window->ns.object = [[NSWindow alloc] initWithContentRect: frame
+  window->ns.object = [[NeptuneCocoaWindow alloc] initWithContentRect: frame
                                                   styleMask: getStyleMask(window)
                                                     backing: NSBackingStoreBuffered
                                                       defer: NO];
@@ -114,7 +137,7 @@ void platformCreateWindow(NeptuneWindow* window) {
   [window->ns.object setDelegate: window->ns.delegate];
 
   //Center the window on the screen (need to cast id type to NSWindow because there is more than one center method)
-  [(NSWindow*)window->ns.object center];
+  [(NeptuneCocoaWindow*)window->ns.object center];
 
   //Set a title if one is defined
   if (window->title)
@@ -125,14 +148,9 @@ void platformCreateWindow(NeptuneWindow* window) {
 
   platformCreateGLContext(window);
 
-  glBegin(GL_TRIANGLES);
-  glVertex2f(0.0f, 0.5f);
-  glVertex2f(0.5f, -0.5f);
-  glVertex2f(-0.5f, -0.5f);
-  glEnd();
-
   //Show the window object
   [window->ns.object makeKeyAndOrderFront:nil];
+  [window->ns.object orderFrontRegardless];
 
   //OSX requires us to update the application in order to display the window
   platformPollEvents();

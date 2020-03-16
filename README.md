@@ -12,3 +12,7 @@ It's Basically GLFW but I'm gonna add Metal and DirectX
 
 ## Compiling The Library
 Neptune uses GNU Make for compiling the library. It currently only runs on macOS, so that is all it can compile from. To compile, use `cd` to navigate to the directory and run `make` in the terminal. The Neptune library will appear in the bin folder. If you want to compile the examples, run `make example EXAMPLE=project`, project being the name of the example file.
+
+### Neptune Colors
+* Neptune Blue - 394C56
+* Sandy Brown - 877158
