@@ -7,11 +7,13 @@ LIBFILES =\
 Src/Window.c \
 Src/Init.c \
 Src/Global.c \
+Src/Cocoa/CocoaGLContext.m \
 Src/Cocoa/CocoaWindow.m \
 Src/Cocoa/CocoaInit.m
 
 DEFINES =\
--D NEPTUNE_COCOA
+-D NEPTUNE_COCOA \
+-D GL_SILENCE_DEPRECATION
 
 FLAGS =\
 $(DEFINES) \
@@ -27,7 +29,9 @@ lib:
 EXAMFLAGS =\
 -I $(PATH)include/ \
 -framework Cocoa \
--o $(EXAMPLE)
+-framework OpenGL \
+-o $(EXAMPLE) \
+-D GL_SILENCE_DEPRECATION
 
 example:
 	clang Examples/$(EXAMPLE).c Bin/Neptune.a $(EXAMFLAGS)

@@ -5,7 +5,7 @@ int main() {
 
   NeptuneWindow* window = neptuneCreateWindow(1080, 720, "Example Window");
 
-  while (!neptuneShouldWindowcClose(window))
+  while (!neptuneWindowShouldClose(window))
     neptunePollEvents();
 
   neptuneTerminate();

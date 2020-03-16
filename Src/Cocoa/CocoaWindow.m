@@ -25,6 +25,58 @@
 
 @end
 
+@interface NeptuneView : NSView {
+  NeptuneWindow* window;
+}
+- (id) init:(NeptuneWindow*)win;
+@end
+
+@implementation NeptuneView
+
+- (id) init:(NeptuneWindow*)win {
+  window = win;
+
+  self = [[NeptuneView alloc] initWithFrame: NSMakeRect(0.0, 0.0, window->width, window->height)];
+
+  return self;
+}
+
+- (void)drawRect:(NSRect)dirtyRect {
+
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //Platform specific method for obtaining properties of a women
 NSUInteger getStyleMask(NeptuneWindow* window) {
 
@@ -68,6 +120,17 @@ void platformCreateWindow(NeptuneWindow* window) {
   if (window->title)
     [window->ns.object setTitle:[NSString stringWithUTF8String: window->title]];
 
+  window->ns.view = [[NeptuneView alloc] init: window];
+  [window->ns.object setContentView: window->ns.view];
+
+  platformCreateGLContext(window);
+
+  glBegin(GL_TRIANGLES);
+  glVertex2f(0.0f, 0.5f);
+  glVertex2f(0.5f, -0.5f);
+  glVertex2f(-0.5f, -0.5f);
+  glEnd();
+
   //Show the window object
   [window->ns.object makeKeyAndOrderFront:nil];
 
@@ -79,8 +142,12 @@ void platformDestroyWindow(NeptuneWindow* window) {
   [window->ns.object close];
 }
 
-NeptuneBool platformShouldWindowClose(NeptuneWindow* window) {
+NeptuneBool platformWindowShouldClose(NeptuneWindow* window) {
   return window->shouldClose;
+}
+
+void platformSwapBuffers(NeptuneWindow* window) {
+  [window->context.object flushBuffer];
 }
 
 #endif

@@ -30,7 +30,7 @@ extern _NeptuneLibrary _neptune;
 
 #define _NEPTUNE_REQUIRE_INIT \
 if (!_neptune.initialized) { \
-  printf("Initialize Neptune before doing this"); \
+  printf("Fatal Error: Please Initialize Neptune"); \
   exit(0); \
 }
 
@@ -45,14 +45,21 @@ struct NeptuneWindow {
 
   //Platform specific window context (defined in platform header file)
   _NEPTUNE_PLATFORM_WINDOW_CONTEXT;
+
+  //Platform specific OpenGL context
+  _NEPTUNE_PLATFORM_GL_CONTEXT;
 };
 
 //Private Methods
 NeptuneBool platformInit(void);
+void platformCreateGLContext(NeptuneWindow* window);
+void platformCreateGLPixelFormat(NeptuneWindow* window);
 void platformCreateWindow(NeptuneWindow* window);
 void platformPollEvents(void);
 void platformDestroyWindow(NeptuneWindow* window);
-NeptuneBool platformShouldWindowClose(NeptuneWindow* window);
+NeptuneBool platformWindowShouldClose(NeptuneWindow* window);
+void platformMakeContextCurrent(NeptuneWindow* window);
 void platformTerminate(void);
+void platformSwapBuffers(NeptuneWindow* window);
 
 #endif /* end of include guard: Internal_h */
