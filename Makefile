@@ -20,9 +20,10 @@ $(DEFINES) \
 -I $(PATH)include/ \
 -iquote $(PATH)src/
 
+.SILENT:
 lib:
 	clang -c $(LIBFILES) $(FLAGS)
-	ar -rv Neptune.a Window.o Init.o Global.o CocoaWindow.o CocoaInit.o
+	ar rcs Neptune.a Window.o Init.o Global.o CocoaWindow.o CocoaInit.o CocoaGLContext.o
 	find $(PATH) -name '*.o' -delete
 	mv Neptune.a bin/Neptune.a
 
@@ -35,3 +36,16 @@ EXAMFLAGS =\
 
 example:
 	clang Examples/$(EXAMPLE).c Bin/Neptune.a $(EXAMFLAGS)
+
+VERSION=0.0.0
+NAME = NeptuneGL-$(VERSION)
+RPATH = Releases/$(NAME)
+
+release:
+	mkdir $(RPATH)
+	cp -r Include $(RPATH)/
+	cp Bin/Neptune.a $(RPATH)/Neptune.a
+	cp LICENSE $(RPATH)/LICENSE
+	cp -r $(RPATH) $(NAME)
+	zip -r -qq -X $(NAME).zip $(NAME)
+	rm -R $(NAME)

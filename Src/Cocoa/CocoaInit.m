@@ -44,4 +44,5 @@ void platformTerminate() {
   [NSApp terminate: nil];
 }
 
+
 #endif

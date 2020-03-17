@@ -1,6 +1,6 @@
 #include "Internal.h"
 
-NeptuneWindow* neptuneCreateWindow(int width, int height, const char* title) {
+NEPTUNEAPI NeptuneWindow* neptuneCreateWindow(int width, int height, const char* title) {
 
   assert(title != NULL);
   assert(width >= 0);
@@ -22,28 +22,28 @@ NeptuneWindow* neptuneCreateWindow(int width, int height, const char* title) {
   return window;
 }
 
-void neptuneDestroyWindow(NeptuneWindow* window) {
+NEPTUNEAPI void neptuneDestroyWindow(NeptuneWindow* window) {
   assert(window != NULL);
   _NEPTUNE_REQUIRE_INIT;
 
   platformDestroyWindow(window);
 }
 
-NeptuneBool neptuneWindowShouldClose(NeptuneWindow* window) {
+NEPTUNEAPI NeptuneBool neptuneWindowShouldClose(NeptuneWindow* window) {
   assert(window != NULL);
   _NEPTUNE_REQUIRE_INIT;
 
   return platformWindowShouldClose(window);
 }
 
-void neptuneSwapBuffers(NeptuneWindow* window) {
+NEPTUNEAPI void neptuneSwapBuffers(NeptuneWindow* window) {
   assert(window != NULL);
   _NEPTUNE_REQUIRE_INIT;
 
   platformSwapBuffers(window);
 }
 
-void neptuneMakeContextCurrent(NeptuneWindow* window) {
+NEPTUNEAPI void neptuneMakeContextCurrent(NeptuneWindow* window) {
   assert(window != NULL);
   _NEPTUNE_REQUIRE_INIT;
 

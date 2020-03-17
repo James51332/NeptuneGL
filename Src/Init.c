@@ -1,14 +1,14 @@
 #include "Internal.h"
 
-void neptuneInit() {
+NEPTUNEAPI void neptuneInit() {
   if (platformInit())
     _neptune.initialized = NEPTUNE_TRUE;
 }
 
-void neptunePollEvents() {
+NEPTUNEAPI void neptunePollEvents() {
   platformPollEvents();
 }
 
-void neptuneTerminate() {
+NEPTUNEAPI void neptuneTerminate() {
   platformTerminate();
 }

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 //Cocoa ID Translation
 #ifdef __OBJC__
   #include <Cocoa/Cocoa.h>
@@ -14,6 +15,8 @@
 
 //Platform Includes
 #ifdef NEPTUNE_COCOA
+  #define NEPTUNEAPI __attribute__((visibility("default")))
+
   #include "Cocoa/CocoaPlatform.h"
 #endif
 
@@ -51,9 +54,11 @@ struct NeptuneWindow {
 };
 
 //Private Methods
-NeptuneBool platformInit(void);
 void platformCreateGLContext(NeptuneWindow* window);
+
 void platformCreateGLPixelFormat(NeptuneWindow* window);
+
+NeptuneBool platformInit(void);
 void platformCreateWindow(NeptuneWindow* window);
 void platformPollEvents(void);
 void platformDestroyWindow(NeptuneWindow* window);

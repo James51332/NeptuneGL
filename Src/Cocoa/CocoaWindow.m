@@ -60,46 +60,6 @@
 }
 @end
 
-void platformCreateGLContext(NeptuneWindow* window) {
-  assert(window != NULL);
-  _NEPTUNE_REQUIRE_INIT;
-
-  platformCreateGLPixelFormat(window);
-
-  window->context.object = [[NSOpenGLContext alloc] initWithFormat:window->context.pixelFormat
-                                      shareContext: nil];
-
-  [window->context.object setView: window->ns.view];
-}
-
-void platformCreateGLPixelFormat(NeptuneWindow* window) {
-  assert(window != NULL);
-  _NEPTUNE_REQUIRE_INIT;
-
-  //Thanks to https://developer.apple.com/documentation/appkit/nsopenglpixelformat/1436219-initwithattributes?language=objc
-  //for this simple opengl pixelformat
-  NSOpenGLPixelFormatAttribute attrs[] =
-  {
-      NSOpenGLPFADoubleBuffer,
-      NSOpenGLPFADepthSize, 32,
-      0
-  };
-
-  NSOpenGLPixelFormat* pixFmt = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
-
-  if(pixFmt == nil) {
-
-  }
-
-  window->context.pixelFormat = pixFmt;
-
-}
-
-void platformMakeContextCurrent(NeptuneWindow* window) {
-  [window->context.object makeCurrentContext];
-}
-
-
 //Platform specific method for obtaining properties of a women
 NSUInteger getStyleMask(NeptuneWindow* window) {
 
@@ -119,9 +79,6 @@ NSUInteger getStyleMask(NeptuneWindow* window) {
 
 //Neptune's native function for creating a window
 void platformCreateWindow(NeptuneWindow* window) {
-
-  //TODO: Add macro to require initialization of the neptune
-  _NEPTUNE_REQUIRE_INIT;
 
   //Create the frame for the window (We'll position it later)
   NSRect frame = NSMakeRect(0.0, 0.0, window->width, window->height);
