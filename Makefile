@@ -1,5 +1,5 @@
 STATIC = ON
-EXAMPLE = Window
+EXAMPLE = Triangle
 
 PATH = $(shell pwd)/
 
@@ -46,6 +46,7 @@ release:
 	cp -r Include $(RPATH)/
 	cp Bin/Neptune.a $(RPATH)/Neptune.a
 	cp LICENSE $(RPATH)/LICENSE
-	cp -r $(RPATH) $(NAME)
+	mv $(RPATH) $(NAME)
 	zip -r -qq -X $(NAME).zip $(NAME)
+	mv $(NAME).zip $(RPATH).zip
 	rm -R $(NAME)
