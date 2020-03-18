@@ -50,3 +50,6 @@ release:
 	zip -r -qq -X $(NAME).zip $(NAME)
 	mv $(NAME).zip $(RPATH).zip
 	rm -R $(NAME)
+
+test:
+	echo "Game"
