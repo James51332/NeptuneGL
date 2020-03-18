@@ -10,9 +10,9 @@ typedef int NeptuneBool;
   #include <OpenGL/gl.h>
 #endif
 
-typedef struct NeptuneWindow NeptuneWindow;
+typedef struct _NeptuneWindow NeptuneWindow;
 
-void neptuneInit(void);
+int neptuneInit(void);
 NeptuneWindow* neptuneCreateWindow(int width, int height, const char* title);
 void neptunePollEvents(void);
 void neptuneDestroyWindow(NeptuneWindow* window);

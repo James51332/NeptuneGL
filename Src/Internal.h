@@ -1,10 +1,11 @@
 #ifndef Internal_h
 #define Internal_h
 
+//Standard C Includes
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 //Cocoa ID Translation
 #ifdef __OBJC__
@@ -27,6 +28,8 @@
 typedef struct _NeptuneLibrary {
   NeptuneBool initialized;
 
+  NeptuneWindow* windowListHead;
+
 } _NeptuneLibrary;
 
 extern _NeptuneLibrary _neptune;
@@ -38,7 +41,9 @@ if (!_neptune.initialized) { \
 }
 
 //Private Structs
-struct NeptuneWindow {
+struct _NeptuneWindow {
+  struct _NeptuneWindow* next;
+
   int width;
   int height;
   const char* title;
@@ -55,7 +60,6 @@ struct NeptuneWindow {
 
 //Private Methods
 void platformCreateGLContext(NeptuneWindow* window);
-
 void platformCreateGLPixelFormat(NeptuneWindow* window);
 
 NeptuneBool platformInit(void);
