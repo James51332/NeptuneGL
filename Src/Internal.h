@@ -16,9 +16,19 @@
 
 //Platform Includes
 #ifdef NEPTUNE_COCOA
-  #define NEPTUNEAPI __attribute__((visibility("default")))
 
-  #include "Cocoa/CocoaPlatform.h"
+#ifdef NEPTUNE_DYNAMIC
+  #define NEPTUNEAPI __attribute__((visibility("default")))
+#else
+  #define NEPTUNEAPI
+#endif
+
+#include "Cocoa/CocoaPlatform.h"
+
+#else
+
+#define NEPTUNEAPI
+
 #endif
 
 //Public Header Prototypes
@@ -33,12 +43,6 @@ typedef struct _NeptuneLibrary {
 } _NeptuneLibrary;
 
 extern _NeptuneLibrary _neptune;
-
-#define _NEPTUNE_REQUIRE_INIT \
-if (!_neptune.initialized) { \
-  printf("Fatal Error: Please Initialize Neptune"); \
-  exit(0); \
-}
 
 //Private Structs
 struct _NeptuneWindow {
@@ -58,17 +62,45 @@ struct _NeptuneWindow {
   _NEPTUNE_PLATFORM_GL_CONTEXT;
 };
 
-//Private Methods
-void platformCreateGLContext(NeptuneWindow* window);
-void platformCreateGLPixelFormat(NeptuneWindow* window);
+//Private Enums
+typedef enum _NeptuneError {
+  _NEPTUNE_INIT_ERROR,
+  _NEPTUNE_PLATFORM_ERROR,
+} NeptuneError;
 
-NeptuneBool platformInit(void);
-void platformCreateWindow(NeptuneWindow* window);
-void platformPollEvents(void);
-void platformDestroyWindow(NeptuneWindow* window);
-NeptuneBool platformWindowShouldClose(NeptuneWindow* window);
-void platformMakeContextCurrent(NeptuneWindow* window);
-void platformTerminate(void);
-void platformSwapBuffers(NeptuneWindow* window);
+// ---------------------------------------------------
+// ---------------------------------------------------
+// ----------     NEPTUNE PLATFORM API      ----------
+// ---------------------------------------------------
+// ---------------------------------------------------
+NeptuneBool                                             platformInit(void);
+void                                               platformTerminate(void);
+void                           platformCreateWindow(NeptuneWindow* window);
+void                          platformDestroyWindow(NeptuneWindow* window);
+void                    platformCreateGLPixelFormat(NeptuneWindow* window);
+void                        platformCreateGLContext(NeptuneWindow* window);
+void                     platformMakeContextCurrent(NeptuneWindow* window);
+void                            platformSwapBuffers(NeptuneWindow* window);
+void                                              platformPollEvents(void);
+
+// ---------------------------------------------------
+// ---------------------------------------------------
+// ----------     NEPTUNE UTILITY API       ----------
+// ---------------------------------------------------
+// ---------------------------------------------------
+void             _neptuneRequestError(NeptuneError error, const char* msg);
+
+
+#define _NEPTUNE_REQUIRE_INIT() \
+if (!_neptune.initialized) { \
+  _neptuneRequestError(_NEPTUNE_INIT_ERROR, "Please Initialize Neptune"); \
+  return; \
+}
+
+#define _NEPTUNE_REQUIRE_INIT_OR_RETURN(x) \
+if (!_neptune.initialized) { \
+  _neptuneRequestError(_NEPTUNE_INIT_ERROR, "Please Initialize Neptune"); \
+  return x; \
+}
 
 #endif /* end of include guard: Internal_h */

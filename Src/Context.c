@@ -6,18 +6,20 @@
 // ---------------------------------------------------
 // ---------------------------------------------------
 
-NEPTUNEAPI int neptuneInit(void) {
-  if (platformInit())
-    _neptune.initialized = NEPTUNE_TRUE;
+NEPTUNEAPI void neptuneSwapBuffers(NeptuneWindow* window) {
 
-  return _neptune.initialized;
-}
+  assert(window != NULL);
 
-NEPTUNEAPI void neptuneTerminate(void) {
   _NEPTUNE_REQUIRE_INIT();
 
-  if (_neptune.windowListHead != NULL)
-    neptuneDestroyAllWindows();
+  platformSwapBuffers(window);
+}
 
-  platformTerminate();
+NEPTUNEAPI void neptuneMakeContextCurrent(NeptuneWindow* window) {
+
+  assert(window != NULL);
+
+  _NEPTUNE_REQUIRE_INIT();
+
+  platformMakeContextCurrent(window);
 }

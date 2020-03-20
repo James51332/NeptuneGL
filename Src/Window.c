@@ -1,9 +1,12 @@
 #include "Internal.h"
 
+// ---------------------------------------------------
+// ---------------------------------------------------
+// ----------       NEPTUNE METHODS         ----------
+// ---------------------------------------------------
+// ---------------------------------------------------
+
 void insertWindowIntoGlobalList(NeptuneWindow* window) {
-
-  assert(window != NULL);
-
   if (_neptune.windowListHead == NULL) {
     _neptune.windowListHead = window;
     return;
@@ -15,13 +18,20 @@ void insertWindowIntoGlobalList(NeptuneWindow* window) {
   tracer -> next = window;
 }
 
+// ---------------------------------------------------
+// ---------------------------------------------------
+// ----------      NEPTUNE PUBLIC API       ----------
+// ---------------------------------------------------
+// ---------------------------------------------------
+
+
 NEPTUNEAPI NeptuneWindow* neptuneCreateWindow(int width, int height, const char* title) {
 
   assert(title != NULL);
   assert(width >= 0);
   assert(height >= 0);
 
-  _NEPTUNE_REQUIRE_INIT;
+  _NEPTUNE_REQUIRE_INIT_OR_RETURN(NULL);
 
   NeptuneWindow* window = (NeptuneWindow*) malloc(sizeof(NeptuneWindow));
 
@@ -45,32 +55,52 @@ NEPTUNEAPI void neptuneDestroyWindow(NeptuneWindow* window) {
 
   assert(window != NULL);
 
-  _NEPTUNE_REQUIRE_INIT;
+  _NEPTUNE_REQUIRE_INIT();
 
   platformDestroyWindow(window);
+}
+
+NEPTUNEAPI void neptuneDestroyAllWindows() {
+
+  _NEPTUNE_REQUIRE_INIT();
+
+  if (_neptune.windowListHead == NULL)
+    return;
+
+  while (_neptune.windowListHead != NULL) {
+    NeptuneWindow *pointer = _neptune.windowListHead -> next;
+    neptuneDestroyWindow(_neptune.windowListHead);
+    free(_neptune.windowListHead);
+    _neptune.windowListHead = pointer;
+  }
 }
 
 NEPTUNEAPI NeptuneBool neptuneWindowShouldClose(NeptuneWindow* window) {
 
   assert(window != NULL);
 
-  _NEPTUNE_REQUIRE_INIT;
+  _NEPTUNE_REQUIRE_INIT_OR_RETURN(NEPTUNE_FALSE);
 
-  return platformWindowShouldClose(window);
+  if (window->shouldClose)
+    return window->shouldClose;
+  else
+    return NEPTUNE_FALSE;
 }
 
-NEPTUNEAPI void neptuneSwapBuffers(NeptuneWindow* window) {
+// ---------------------------------------------------
+// ---------------------------------------------------
+// ----------      NEPTUNE GETTER API       ----------
+// ---------------------------------------------------
+// ---------------------------------------------------
 
+NEPTUNEAPI void neptuneGetWindowSize(NeptuneWindow* window, int* width, int* height) {
   assert(window != NULL);
-  _NEPTUNE_REQUIRE_INIT;
 
-  platformSwapBuffers(window);
-}
+  _NEPTUNE_REQUIRE_INIT();
 
-NEPTUNEAPI void neptuneMakeContextCurrent(NeptuneWindow* window) {
+  if (width != NULL)
+    width = &window->width;
 
-  assert(window != NULL);
-  _NEPTUNE_REQUIRE_INIT;
-
-  platformMakeContextCurrent(window);
+  if (height != NULL)
+    height = &window->height;
 }

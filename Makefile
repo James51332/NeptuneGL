@@ -7,9 +7,13 @@ LIBFILES =\
 Src/Window.c \
 Src/Init.c \
 Src/Global.c \
+Src/Event.c \
+Src/Utility.c \
+Src/Context.c \
 Src/Cocoa/CocoaGLContext.m \
 Src/Cocoa/CocoaWindow.m \
-Src/Cocoa/CocoaInit.m
+Src/Cocoa/CocoaInit.m \
+Src/Cocoa/CocoaEvent.m
 
 DEFINES =\
 -D NEPTUNE_COCOA \
@@ -20,10 +24,12 @@ $(DEFINES) \
 -I $(PATH)include/ \
 -iquote $(PATH)src/
 
+OBJFILES = $(shell )
+
 .SILENT:
 lib:
 	clang -c $(LIBFILES) $(FLAGS)
-	ar rcs Neptune.a Window.o Init.o Global.o CocoaWindow.o CocoaInit.o CocoaGLContext.o
+	ar rcs Neptune.a Window.o Init.o Global.o Event.o Utility.o Context.o CocoaEvent.o CocoaGLContext.o CocoaWindow.o CocoaInit.o
 	find $(PATH) -name '*.o' -delete
 	mv Neptune.a bin/Neptune.a
 
@@ -50,6 +56,3 @@ release:
 	zip -r -qq -X $(NAME).zip $(NAME)
 	mv $(NAME).zip $(RPATH).zip
 	rm -R $(NAME)
-
-test:
-	echo "Game"
