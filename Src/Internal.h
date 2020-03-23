@@ -40,6 +40,8 @@ typedef struct _NeptuneLibrary {
 
   NeptuneWindow* windowListHead;
 
+  _NEPTUNE_GLOBAL_PLATFORM_CONTEXT;
+
 } _NeptuneLibrary;
 
 extern _NeptuneLibrary _neptune;
