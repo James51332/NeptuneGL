@@ -41,6 +41,23 @@
 
   return self;
 }
+
+- (BOOL) acceptsFirstResponder {
+  return YES;
+}
+
+- (BOOL) canBecomeKeyView {
+    return YES;
+}
+
+//TODO: Handle Events
+- (void)mouseDown:(NSEvent *)event {
+  NSLog(@"Mouse Pressed");
+}
+
+- (void)keyDown:(NSEvent *)event {
+  NSLog(@"Key Pressed");
+}
 @end
 
 @interface NeptuneCocoaWindow : NSWindow
@@ -80,7 +97,6 @@ NSUInteger getStyleMask(NeptuneWindow* window) {
 // ---------------------------------------------------
 
 void platformCreateWindow(NeptuneWindow* window) {
-  @autoreleasepool {
     NSRect frame = NSMakeRect(0.0, 0.0, window->width, window->height);
 
     window->ns.object = [[NeptuneCocoaWindow alloc] initWithContentRect: frame
@@ -98,6 +114,7 @@ void platformCreateWindow(NeptuneWindow* window) {
 
     window->ns.view = [[NeptuneView alloc] init: window];
     [window->ns.object setContentView: window->ns.view];
+    [window->ns.object makeFirstResponder:window->ns.view];
 
     platformCreateGLContext(window);
 
@@ -106,11 +123,21 @@ void platformCreateWindow(NeptuneWindow* window) {
 
     //OSX requires us to update the application in order to display the window
     neptunePollEvents();
-  }
+
 }
 
 void platformDestroyWindow(NeptuneWindow* window) {
+  [window->ns.object setContentView:nil];
+  [window->ns.view release];
+  window->ns.view = nil;
+
+  [window->ns.object setDelegate:nil];
+  [window->ns.delegate release];
+  window->ns.delegate = nil;
+
   [window->ns.object close];
+  [window->ns.object release];
+  window->ns.object = nil;
 }
 
 #endif

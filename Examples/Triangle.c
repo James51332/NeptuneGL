@@ -1,6 +1,7 @@
 #include <Neptune/Neptune.h>
 
 #include <OpenGL/gl.h>
+#include <OpenGL/OpenGL.h>
 
 int main() {
   neptuneInit();

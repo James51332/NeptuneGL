@@ -12,7 +12,8 @@ void platformCreateGLPixelFormat(NeptuneWindow* window) {
   assert(window != NULL);
   _NEPTUNE_REQUIRE_INIT();
 
-  //Thanks to https://developer.apple.com/documentation/appkit/nsopenglpixelformat/1436219-initwithattributes?language=objc
+  //Credit to
+  //https://developer.apple.com/documentation/appkit/nsopenglpixelformat/1436219-initwithattributes?language=objc
   //for this simple opengl pixelformat
   NSOpenGLPixelFormatAttribute attrs[] =
   {
@@ -33,7 +34,10 @@ void platformCreateGLPixelFormat(NeptuneWindow* window) {
 // ---------------------------------------------------
 
 void platformMakeContextCurrent(NeptuneWindow* window) {
-  [window->context.object makeCurrentContext];
+  if (window != NULL)
+    [window->context.object makeCurrentContext];
+  else
+    [NSOpenGLContext clearCurrentContext];
 }
 
 void platformSwapBuffers(NeptuneWindow* window) {

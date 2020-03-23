@@ -19,7 +19,7 @@ void platformPollEvents(void) {
 
       //If there is are no more events, return
       if (!event)
-        break;
+        return;
       else
         [NSApp sendEvent: event];
     }
