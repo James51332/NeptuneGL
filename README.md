@@ -5,7 +5,7 @@ https://garagecrew.org/neptune
 
 ## Features
 * GLFW Style Window Creation (macOS Only)
-* OpenGL 1.1 Ready
+* OpenGL 2.1 Ready
 
 ## Future
 * Desktop Platform Window Creation

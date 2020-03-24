@@ -4,6 +4,31 @@
 
 // ---------------------------------------------------
 // ---------------------------------------------------
+// ----------      NEPTUNE METHOD API       ----------
+// ---------------------------------------------------
+// ---------------------------------------------------
+
+NSUInteger getStyleMask(NeptuneWindow* window) {
+  NSUInteger styleMask = NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskClosable;
+
+  if (window->resizable)
+    styleMask |= NSWindowStyleMaskResizable;
+
+  if (window->title)
+    styleMask |= NSWindowStyleMaskTitled;
+
+  return styleMask;
+}
+
+int translateKey(unsigned short int key) {
+  if (key < 0 || key >= sizeof(_neptune.ns.keyCode))
+    return NEPTUNE_KEY_UNKNOWN;
+
+  return _neptune.ns.keyCode[key];
+}
+
+// ---------------------------------------------------
+// ---------------------------------------------------
 // ----------       NEPTUNE OBJC API        ----------
 // ---------------------------------------------------
 // ---------------------------------------------------
@@ -49,15 +74,6 @@
 - (BOOL) canBecomeKeyView {
     return YES;
 }
-
-//TODO: Handle Events
-- (void)mouseDown:(NSEvent *)event {
-  NSLog(@"Mouse Pressed");
-}
-
-- (void)keyDown:(NSEvent *)event {
-  NSLog(@"Key Pressed");
-}
 @end
 
 @interface NeptuneCocoaWindow : NSWindow
@@ -71,24 +87,6 @@
   return YES;
 }
 @end
-
-// ---------------------------------------------------
-// ---------------------------------------------------
-// ----------      NEPTUNE METHOD API       ----------
-// ---------------------------------------------------
-// ---------------------------------------------------
-
-NSUInteger getStyleMask(NeptuneWindow* window) {
-  NSUInteger styleMask = NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskClosable;
-
-  if (window->resizable)
-    styleMask |= NSWindowStyleMaskResizable;
-
-  if (window->title)
-    styleMask |= NSWindowStyleMaskTitled;
-
-  return styleMask;
-}
 
 // ---------------------------------------------------
 // ---------------------------------------------------
@@ -114,7 +112,6 @@ void platformCreateWindow(NeptuneWindow* window) {
 
     window->ns.view = [[NeptuneView alloc] init: window];
     [window->ns.object setContentView: window->ns.view];
-    [window->ns.object makeFirstResponder:window->ns.view];
 
     platformCreateGLContext(window);
 

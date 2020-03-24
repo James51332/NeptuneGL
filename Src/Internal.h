@@ -57,6 +57,8 @@ struct _NeptuneWindow {
   NeptuneBool resizable;
   NeptuneBool shouldClose;
 
+  NeptuneBool *keys;
+
   //Platform specific window context (defined in platform header file)
   _NEPTUNE_PLATFORM_WINDOW_CONTEXT;
 
@@ -75,6 +77,7 @@ typedef enum _NeptuneError {
 // ----------     NEPTUNE PLATFORM API      ----------
 // ---------------------------------------------------
 // ---------------------------------------------------
+
 NeptuneBool                                             platformInit(void);
 void                                               platformTerminate(void);
 void                           platformCreateWindow(NeptuneWindow* window);
@@ -90,8 +93,9 @@ void                                              platformPollEvents(void);
 // ----------     NEPTUNE UTILITY API       ----------
 // ---------------------------------------------------
 // ---------------------------------------------------
-void             _neptuneRequestError(NeptuneError error, const char* msg);
 
+void             _neptuneRequestError(NeptuneError error, const char* msg);
+void  _neptuneRequestKey(int key, NeptuneBool down, NeptuneWindow* window);
 
 #define _NEPTUNE_REQUIRE_INIT() \
 if (!_neptune.initialized) { \

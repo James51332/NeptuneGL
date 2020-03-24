@@ -13,7 +13,8 @@ typedef struct _NeptuneWindowNS {
 
 typedef struct _NeptuneGlobalNS {
   //Currently only supports letter and number keys
-  short int keyCodes[256];
+  short int keyCode[256];
+  id menu;
 } NeptuneGlobalNS;
 
 //platform window creation macro

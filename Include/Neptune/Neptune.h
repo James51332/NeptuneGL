@@ -73,6 +73,7 @@ void neptuneSwapBuffers(NeptuneWindow* window);
 
 void neptunePollEvents(void);
 
+NeptuneBool neptuneGetKeyStatus(int key, NeptuneWindow* window);
 
 void neptuneGetWindowSize(NeptuneWindow* window, int* width, int* height);
 
