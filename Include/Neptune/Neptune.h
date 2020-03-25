@@ -12,6 +12,9 @@
 typedef int NeptuneBool;
 typedef struct _NeptuneWindow NeptuneWindow;
 
+#define NEPTUNE_PRESS 1
+#define NEPTUNE_RELEASE 0
+
 #define NEPTUNE_KEY_UNKNOWN -1
 
 //Standard ASCII Key Codes
@@ -52,6 +55,8 @@ typedef struct _NeptuneWindow NeptuneWindow;
 #define NEPTUNE_KEY_7 55
 #define NEPTUNE_KEY_8 56
 #define NEPTUNE_KEY_9 57
+
+#define NEPTUNE_KEY_LAST NEPTUNE_KEY_Z
 
 // ---------------------------------------------------
 // ---------------------------------------------------

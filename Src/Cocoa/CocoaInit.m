@@ -55,7 +55,7 @@ void keyCodeInit(void) {
 }
 
 void createMenuBar(void) {
-  //Most of this is directly parellel off of glfw.
+  //Most of this is directly parellel to glfw.
   //src/cocoa_init.m
 
   //Get application title
@@ -119,9 +119,7 @@ NeptuneBool platformInit(void) {
 }
 
 void platformTerminate(void) {
-  @autoreleasepool {
-    [NSApp terminate: nil];
-  }
+  [NSApp terminate: nil];
 }
 
 #endif

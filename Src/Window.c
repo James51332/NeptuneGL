@@ -44,8 +44,8 @@ NEPTUNEAPI NeptuneWindow* neptuneCreateWindow(int width, int height, const char*
   window->resizable = NEPTUNE_TRUE;
   window->shouldClose = NEPTUNE_FALSE;
 
-  window->keys = (NeptuneBool *) malloc(256 * sizeof(NeptuneBool));
-  memset(window->keys, NEPTUNE_FALSE, 256);
+  window->keys = (int *) malloc((NEPTUNE_KEY_LAST + 1) * sizeof(NeptuneBool));
+  memset(window->keys, NEPTUNE_RELEASE, sizeof(window->keys) / sizeof(NeptuneBool));
 
   platformCreateWindow(window);
 

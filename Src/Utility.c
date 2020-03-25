@@ -16,9 +16,3 @@ void _neptuneRequestError(NeptuneError error, const char* msg) {
       printf("NeptuneGL Platform Error: %s", msg);
   }
 }
-
-void _neptuneRequestKey(int key, NeptuneBool down, NeptuneWindow *window) {
-  _NEPTUNE_REQUIRE_INIT();
-
-  window->keys[key] = down;
-}

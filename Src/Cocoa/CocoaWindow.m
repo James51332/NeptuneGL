@@ -20,7 +20,7 @@ NSUInteger getStyleMask(NeptuneWindow* window) {
   return styleMask;
 }
 
-int translateKey(unsigned short int key) {
+static int translateKey(unsigned short key) {
   if (key < 0 || key >= sizeof(_neptune.ns.keyCode))
     return NEPTUNE_KEY_UNKNOWN;
 
@@ -60,9 +60,11 @@ int translateKey(unsigned short int key) {
 
 @implementation NeptuneView
 - (id) init:(NeptuneWindow*)win {
-  window = win;
+  self = [super initWithFrame: NSMakeRect(0.0, 0.0, win->width, win->height)];
 
-  self = [[NeptuneView alloc] initWithFrame: NSMakeRect(0.0, 0.0, window->width, window->height)];
+  if (self) {
+    window = win;
+  }
 
   return self;
 }
@@ -72,7 +74,15 @@ int translateKey(unsigned short int key) {
 }
 
 - (BOOL) canBecomeKeyView {
-    return YES;
+  return YES;
+}
+
+- (void)keyDown:(NSEvent *)event {
+  _neptuneRequestKey(translateKey([event keyCode]), NEPTUNE_TRUE, window);
+}
+
+- (void)keyUp:(NSEvent *)event {
+  _neptuneRequestKey(translateKey([event keyCode]), NEPTUNE_FALSE, window);
 }
 @end
 
@@ -108,10 +118,11 @@ void platformCreateWindow(NeptuneWindow* window) {
     [(NeptuneCocoaWindow*)window->ns.object center];
 
     if (window->title)
-      [window->ns.object setTitle:[NSString stringWithUTF8String: window->title]];
+      [window->ns.object setTitle: [NSString stringWithUTF8String: window->title]];
 
     window->ns.view = [[NeptuneView alloc] init: window];
     [window->ns.object setContentView: window->ns.view];
+    [window->ns.object makeFirstResponder: window->ns.view];
 
     platformCreateGLContext(window);
 
