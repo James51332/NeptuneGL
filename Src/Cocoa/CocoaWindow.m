@@ -54,6 +54,7 @@ static int translateKey(unsigned short key) {
 
 @interface NeptuneView : NSView {
   NeptuneWindow* window;
+  NSTimer *timer;
 }
 - (id) init:(NeptuneWindow*)win;
 @end
@@ -66,7 +67,13 @@ static int translateKey(unsigned short key) {
     window = win;
   }
 
+  timer = [NSTimer scheduledTimerWithTimeInterval:0.05f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
+
   return self;
+}
+
+- (void) redraw {
+  [self setNeedsDisplay:YES];
 }
 
 - (BOOL) acceptsFirstResponder {
@@ -83,6 +90,10 @@ static int translateKey(unsigned short key) {
 
 - (void)keyUp:(NSEvent *)event {
   _neptuneRequestKey(translateKey([event keyCode]), NEPTUNE_FALSE, window);
+}
+
+- (void)drawRect:(NSRect)dirtyRect {
+  _neptuneRequestRefresh(window);
 }
 @end
 

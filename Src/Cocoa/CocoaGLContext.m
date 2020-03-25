@@ -55,6 +55,7 @@ void platformCreateGLContext(NeptuneWindow* window) {
                                       shareContext: nil];
 
   [window->context.object setView: window->ns.view];
+
 }
 
 #endif

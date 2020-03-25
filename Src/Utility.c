@@ -16,3 +16,24 @@ void _neptuneRequestError(NeptuneError error, const char* msg) {
       printf("NeptuneGL Platform Error: %s", msg);
   }
 }
+
+void _neptuneRequestRefresh(NeptuneWindow *window) {
+  if (window->callbacks.refresh)
+    window->callbacks.refresh(window);
+}
+
+// ---------------------------------------------------
+// ---------------------------------------------------
+// ----------      NEPTUNE PUBLIC API       ----------
+// ---------------------------------------------------
+// ---------------------------------------------------
+
+NEPTUNEAPI void neptuneSetKeyCallback(NeptuneWindow *window, NeptuneKeyCallback callback) {
+  _NEPTUNE_REQUIRE_INIT();
+  _NEPTUNE_SWAP_POINTERS(window->callbacks.key, callback);
+}
+
+NEPTUNEAPI void neptuneSetRefreshCallback(NeptuneWindow *window, NeptuneRefreshCallback callback) {
+  _NEPTUNE_REQUIRE_INIT();
+  _NEPTUNE_SWAP_POINTERS(window->callbacks.refresh, callback);
+}

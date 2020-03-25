@@ -38,7 +38,7 @@
 typedef struct _NeptuneLibrary {
   NeptuneBool initialized;
 
-  NeptuneWindow* windowListHead;
+  NeptuneWindow *windowListHead;
 
   _NEPTUNE_GLOBAL_PLATFORM_CONTEXT;
 
@@ -48,16 +48,21 @@ extern _NeptuneLibrary _neptune;
 
 //Private Structs
 struct _NeptuneWindow {
-  struct _NeptuneWindow* next;
+  struct _NeptuneWindow *next;
 
   int width;
   int height;
-  const char* title;
+  const char *title;
 
   NeptuneBool resizable;
   NeptuneBool shouldClose;
 
   NeptuneBool *keys;
+
+  struct {
+    NeptuneRefreshCallback refresh;
+    NeptuneKeyCallback key;
+  } callbacks;
 
   //Platform specific window context (defined in platform header file)
   _NEPTUNE_PLATFORM_WINDOW_CONTEXT;
@@ -80,12 +85,12 @@ typedef enum _NeptuneError {
 
 NeptuneBool                                             platformInit(void);
 void                                               platformTerminate(void);
-void                           platformCreateWindow(NeptuneWindow* window);
-void                          platformDestroyWindow(NeptuneWindow* window);
-void                    platformCreateGLPixelFormat(NeptuneWindow* window);
-void                        platformCreateGLContext(NeptuneWindow* window);
-void                     platformMakeContextCurrent(NeptuneWindow* window);
-void                            platformSwapBuffers(NeptuneWindow* window);
+void                           platformCreateWindow(NeptuneWindow *window);
+void                          platformDestroyWindow(NeptuneWindow *window);
+void                    platformCreateGLPixelFormat(NeptuneWindow *window);
+void                        platformCreateGLContext(NeptuneWindow *window);
+void                     platformMakeContextCurrent(NeptuneWindow *window);
+void                            platformSwapBuffers(NeptuneWindow *window);
 void                                              platformPollEvents(void);
 
 // ---------------------------------------------------
@@ -95,7 +100,16 @@ void                                              platformPollEvents(void);
 // ---------------------------------------------------
 
 void             _neptuneRequestError(NeptuneError error, const char* msg);
-void  _neptuneRequestKey(int key, NeptuneBool down, NeptuneWindow* window);
+void  _neptuneRequestKey(int key, NeptuneBool down, NeptuneWindow *window);
+void                         _neptuneRequestRefresh(NeptuneWindow *window);
+
+#define _NEPTUNE_SWAP_POINTERS(x, y) \
+{ \
+  void *a; \
+  a = x; \
+  x = y; \
+  y = a; \
+}
 
 #define _NEPTUNE_REQUIRE_INIT() \
 if (!_neptune.initialized) { \

@@ -10,7 +10,12 @@
 #endif
 
 typedef int NeptuneBool;
+
 typedef struct _NeptuneWindow NeptuneWindow;
+
+typedef void (*NeptuneRefreshCallback)(NeptuneWindow* window);
+typedef void (*NeptuneKeyCallback)(NeptuneWindow* window, int key, NeptuneBool state);
+typedef void (*NeptuneMouseCallback)(NeptuneWindow* window, int key, NeptuneBool state);
 
 #define NEPTUNE_PRESS 1
 #define NEPTUNE_RELEASE 0
@@ -64,22 +69,25 @@ typedef struct _NeptuneWindow NeptuneWindow;
 // ---------------------------------------------------
 // ---------------------------------------------------
 
-int neptuneInit(void);
-void neptuneTerminate(void);
+int                                                           neptuneInit(void);
+void                                                     neptuneTerminate(void);
 
-NeptuneWindow* neptuneCreateWindow(int width, int height, const char* title);
-NeptuneBool neptuneWindowShouldClose(NeptuneWindow* window);
+NeptuneWindow*    neptuneCreateWindow(int width, int height, const char* title);
+NeptuneBool                     neptuneWindowShouldClose(NeptuneWindow* window);
 
-void neptuneDestroyWindow(NeptuneWindow* window);
-void neptuneDestroyAllWindows(void);
+void                                neptuneDestroyWindow(NeptuneWindow* window);
+void                                             neptuneDestroyAllWindows(void);
 
-void neptuneMakeContextCurrent(NeptuneWindow* window);
-void neptuneSwapBuffers(NeptuneWindow* window);
+void                           neptuneMakeContextCurrent(NeptuneWindow* window);
+void                                  neptuneSwapBuffers(NeptuneWindow* window);
 
-void neptunePollEvents(void);
+void                                                    neptunePollEvents(void);
 
-NeptuneBool neptuneGetKeyStatus(int key, NeptuneWindow* window);
+NeptuneBool                 neptuneGetKeyStatus(int key, NeptuneWindow* window);
 
-void neptuneGetWindowSize(NeptuneWindow* window, int* width, int* height);
+void       neptuneGetWindowSize(NeptuneWindow* window, int* width, int* height);
+
+void neptuneSetRefreshCallback(NeptuneWindow *window, NeptuneRefreshCallback c);
+void         neptuneSetKeyCallback(NeptuneWindow *window, NeptuneKeyCallback c);
 
 #endif /* end of include guard: Neptune_h */
