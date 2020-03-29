@@ -15,10 +15,12 @@ void platformCreateGLPixelFormat(NeptuneWindow* window) {
   //Credit to
   //https://developer.apple.com/documentation/appkit/nsopenglpixelformat/1436219-initwithattributes?language=objc
   //for this simple opengl pixelformat
+
   NSOpenGLPixelFormatAttribute attrs[] =
   {
       NSOpenGLPFADoubleBuffer,
       NSOpenGLPFADepthSize, 32,
+      NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion4_1Core,
       0
   };
 
@@ -55,7 +57,6 @@ void platformCreateGLContext(NeptuneWindow* window) {
                                       shareContext: nil];
 
   [window->context.object setView: window->ns.view];
-
 }
 
 #endif

@@ -6,13 +6,17 @@
 // ---------------------------------------------------
 // ---------------------------------------------------
 
-void _neptuneRequestKey(int key, NeptuneBool down, NeptuneWindow *window) {
+void _neptuneRequestKey(int key, NeptuneBool state, NeptuneWindow *window) {
+  assert(window != NULL);
   _NEPTUNE_REQUIRE_INIT();
 
   if (key < 0 || key >= 256)
     return;
 
-  window->keys[key] = down;
+  window->keys[key] = state;
+
+  if (window->callbacks.key)
+    window->callbacks.key(window, key, state);
 }
 
 // ---------------------------------------------------

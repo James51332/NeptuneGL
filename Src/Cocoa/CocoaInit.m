@@ -9,12 +9,36 @@
 // ---------------------------------------------------
 
 void keyCodeInit(void) {
-  //Set all values to unless we specify otherwise
+  //Set all values to unknown unless we specify otherwise
   memset(_neptune.ns.keyCode, NEPTUNE_KEY_UNKNOWN, sizeof(_neptune.ns.keyCode));
 
   //Write in hex for efficiency (out of order due to qwerty) Credit to
   //https://developer.apple.com/library/archive/documentation/mac/pdf/MacintoshToolboxEssentials.pdf (pg. 86 / 909)
-  //for keyCode
+  //for keyCodes
+  _neptune.ns.keyCode[0x30] = NEPTUNE_KEY_TAB;
+  _neptune.ns.keyCode[0x7e] = NEPTUNE_KEY_UP;
+  _neptune.ns.keyCode[0x7c] = NEPTUNE_KEY_RIGHT;
+  _neptune.ns.keyCode[0x7d] = NEPTUNE_KEY_DOWN;
+  _neptune.ns.keyCode[0x7b] = NEPTUNE_KEY_LEFT;
+
+  _neptune.ns.keyCode[0x35] = NEPTUNE_KEY_ESCAPE;
+  _neptune.ns.keyCode[0x31] = NEPTUNE_KEY_SPACE;
+  _neptune.ns.keyCode[0x1b] = NEPTUNE_KEY_MINUS;
+  _neptune.ns.keyCode[0x2b] = NEPTUNE_KEY_COMMA;
+  _neptune.ns.keyCode[0x2f] = NEPTUNE_KEY_PERIOD;
+  _neptune.ns.keyCode[0x2c] = NEPTUNE_KEY_SLASH;
+
+  _neptune.ns.keyCode[0x1D] = NEPTUNE_KEY_0;
+  _neptune.ns.keyCode[0x12] = NEPTUNE_KEY_1;
+  _neptune.ns.keyCode[0x13] = NEPTUNE_KEY_2;
+  _neptune.ns.keyCode[0x14] = NEPTUNE_KEY_3;
+  _neptune.ns.keyCode[0x15] = NEPTUNE_KEY_4;
+  _neptune.ns.keyCode[0x17] = NEPTUNE_KEY_5;
+  _neptune.ns.keyCode[0x16] = NEPTUNE_KEY_6;
+  _neptune.ns.keyCode[0x1A] = NEPTUNE_KEY_7;
+  _neptune.ns.keyCode[0x1C] = NEPTUNE_KEY_8;
+  _neptune.ns.keyCode[0x19] = NEPTUNE_KEY_9;
+
   _neptune.ns.keyCode[0x00] = NEPTUNE_KEY_A;
   _neptune.ns.keyCode[0x0B] = NEPTUNE_KEY_B;
   _neptune.ns.keyCode[0x08] = NEPTUNE_KEY_C;
@@ -41,17 +65,6 @@ void keyCodeInit(void) {
   _neptune.ns.keyCode[0x07] = NEPTUNE_KEY_X;
   _neptune.ns.keyCode[0x10] = NEPTUNE_KEY_Y;
   _neptune.ns.keyCode[0x06] = NEPTUNE_KEY_Z;
-
-  _neptune.ns.keyCode[0x1D] = NEPTUNE_KEY_0;
-  _neptune.ns.keyCode[0x12] = NEPTUNE_KEY_1;
-  _neptune.ns.keyCode[0x13] = NEPTUNE_KEY_2;
-  _neptune.ns.keyCode[0x14] = NEPTUNE_KEY_3;
-  _neptune.ns.keyCode[0x15] = NEPTUNE_KEY_4;
-  _neptune.ns.keyCode[0x17] = NEPTUNE_KEY_5;
-  _neptune.ns.keyCode[0x16] = NEPTUNE_KEY_6;
-  _neptune.ns.keyCode[0x1A] = NEPTUNE_KEY_7;
-  _neptune.ns.keyCode[0x1C] = NEPTUNE_KEY_8;
-  _neptune.ns.keyCode[0x19] = NEPTUNE_KEY_9;
 }
 
 void createMenuBar(void) {
@@ -106,6 +119,9 @@ NeptuneBool platformInit(void) {
   @autoreleasepool {
     //Define an application on macOS
     [NSApplication sharedApplication];
+
+    //Allow input on unbundled executables
+    [NSApp setActivationPolicy: NSApplicationActivationPolicyRegular];
 
     keyCodeInit();
 

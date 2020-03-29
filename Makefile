@@ -9,7 +9,6 @@ Src/Init.c \
 Src/Input.c \
 Src/Global.c \
 Src/Event.c \
-Src/Utility.c \
 Src/Context.c \
 Src/Cocoa/CocoaGLContext.m \
 Src/Cocoa/CocoaWindow.m \
@@ -30,7 +29,7 @@ OBJFILES = $(shell )
 .SILENT:
 lib:
 	clang -c $(LIBFILES) $(FLAGS)
-	ar rcs Neptune.a Window.o Init.o Input.o Global.o Event.o Utility.o Context.o CocoaEvent.o CocoaGLContext.o CocoaWindow.o CocoaInit.o
+	ar rcs Neptune.a Window.o Init.o Input.o Global.o Event.o Context.o CocoaEvent.o CocoaGLContext.o CocoaWindow.o CocoaInit.o
 	find $(PATH) -name '*.o' -delete
 	mv Neptune.a bin/Neptune.a
 

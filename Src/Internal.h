@@ -42,6 +42,11 @@ typedef struct _NeptuneLibrary {
 
   _NEPTUNE_GLOBAL_PLATFORM_CONTEXT;
 
+  struct {
+    int major;
+    int minor;
+  } version;
+
 } _NeptuneLibrary;
 
 extern _NeptuneLibrary _neptune;

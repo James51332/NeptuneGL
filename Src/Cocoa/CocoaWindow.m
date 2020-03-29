@@ -85,11 +85,11 @@ static int translateKey(unsigned short key) {
 }
 
 - (void)keyDown:(NSEvent *)event {
-  _neptuneRequestKey(translateKey([event keyCode]), NEPTUNE_TRUE, window);
+  _neptuneRequestKey(translateKey([event keyCode]), NEPTUNE_PRESS, window);
 }
 
 - (void)keyUp:(NSEvent *)event {
-  _neptuneRequestKey(translateKey([event keyCode]), NEPTUNE_FALSE, window);
+  _neptuneRequestKey(translateKey([event keyCode]), NEPTUNE_RELEASE, window);
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -124,7 +124,6 @@ void platformCreateWindow(NeptuneWindow* window) {
                                                                   defer: NO];
 
     window->ns.delegate = [[NeptuneWindowDelegate alloc] init: window];
-    [window->ns.object setDelegate: window->ns.delegate];
 
     [(NeptuneCocoaWindow*)window->ns.object center];
 
@@ -134,11 +133,12 @@ void platformCreateWindow(NeptuneWindow* window) {
     window->ns.view = [[NeptuneView alloc] init: window];
     [window->ns.object setContentView: window->ns.view];
     [window->ns.object makeFirstResponder: window->ns.view];
-
-    platformCreateGLContext(window);
-
+    [window->ns.object setDelegate: window->ns.delegate];
+    [window->ns.object setAcceptsMouseMovedEvents:YES];
     [window->ns.object makeKeyAndOrderFront:nil];
     [window->ns.object orderFrontRegardless];
+
+    platformCreateGLContext(window);
 
     //OSX requires us to update the application in order to display the window
     neptunePollEvents();
