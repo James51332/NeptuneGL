@@ -6,10 +6,10 @@
 
 #ifdef NEPTUNE_COCOA
   #include <OpenGL/gl.h>
-  #include <OpenGL/OpenGL.h>
 #endif
 
 typedef int NeptuneBool;
+typedef int NeptuneKeyState;
 
 typedef struct _NeptuneWindow NeptuneWindow;
 
@@ -17,8 +17,21 @@ typedef void(*NeptuneRefreshCallback)(NeptuneWindow* window);
 typedef void(*NeptuneKeyCallback)(NeptuneWindow* window, int key, NeptuneBool state);
 typedef void(*NeptuneMouseCallback)(NeptuneWindow* window, int key, NeptuneBool state);
 
+typedef enum _NeptuneError {
+  NEPTUNE_INIT_ERROR,
+  NEPTUNE_PLATFORM_ERROR,
+} NeptuneError;
+
+typedef void(*NeptuneErrorCallback)(NeptuneError error, const char* msg);
+
+typedef enum _NeptuneWindowHint {
+  NEPTUNE_OPENGL_VERSION_MAJOR,
+  NEPTUNE_OPENGL_VERSION_MINOR
+} NeptuneWindowHint;
+
 #define NEPTUNE_PRESS 1
 #define NEPTUNE_RELEASE 0
+#define NEPTUNE_REPEAT 2
 
 #define NEPTUNE_KEY_UNKNOWN -1
 
@@ -38,7 +51,6 @@ typedef void(*NeptuneMouseCallback)(NeptuneWindow* window, int key, NeptuneBool 
 #define NEPTUNE_KEY_DOWN 17
 #define NEPTUNE_KEY_LEFT 18
 
-//Standard ASCII Key Codes
 #define NEPTUNE_KEY_ESCAPE 33
 #define NEPTUNE_KEY_SPACE 40
 #define NEPTUNE_KEY_MINUS 43
@@ -92,10 +104,9 @@ typedef void(*NeptuneMouseCallback)(NeptuneWindow* window, int key, NeptuneBool 
 #define NEPTUNE_KEY_LEFT_BRACKET 91
 #define NEPTUNE_KEY_BACKSLASH 92
 #define NEPTUNE_KEY_RIGHT_BRACKET 93
+#define NEPTUNE_KEY_BACKSPACE 127
 
-#define NEPTUNE_KEY_DELETE 127
-
-#define NEPTUNE_KEY_LAST NEPTUNE_KEY_DELETE
+#define NEPTUNE_KEY_LAST NEPTUNE_KEY_BACKSPACE
 
 // ---------------------------------------------------
 // ---------------------------------------------------
@@ -105,24 +116,18 @@ typedef void(*NeptuneMouseCallback)(NeptuneWindow* window, int key, NeptuneBool 
 
 int                                                           neptuneInit(void);
 void                                                     neptuneTerminate(void);
-
-NeptuneWindow*    neptuneCreateWindow(int width, int height, const char *title);
-NeptuneBool                     neptuneWindowShouldClose(NeptuneWindow *window);
-
-void                                neptuneDestroyWindow(NeptuneWindow *window);
-void                                             neptuneDestroyAllWindows(void);
-
-void                           neptuneMakeContextCurrent(NeptuneWindow *window);
-void                                  neptuneSwapBuffers(NeptuneWindow *window);
-
 void                                                    neptunePollEvents(void);
-
+const char*                                        neptuneGetKeyString(int key);
+void                                             neptuneDestroyAllWindows(void);
+void                                  neptuneSwapBuffers(NeptuneWindow *window);
+void                                neptuneDestroyWindow(NeptuneWindow *window);
+NeptuneBool                     neptuneWindowShouldClose(NeptuneWindow *window);
+void                           neptuneMakeContextCurrent(NeptuneWindow *window);
+void                         neptuneWindowHint(NeptuneWindowHint type, int val);
 NeptuneBool                 neptuneGetKeyStatus(int key, NeptuneWindow *window);
-
-void      neptuneGetWindowSize(NeptuneWindow *window, int *width, int  *height);
-
-void neptuneSetRefreshCallback(NeptuneWindow *window, NeptuneRefreshCallback c);
+NeptuneWindow*    neptuneCreateWindow(int width, int height, const char *title);
 void         neptuneSetKeyCallback(NeptuneWindow *window, NeptuneKeyCallback c);
-
+void      neptuneGetWindowSize(NeptuneWindow *window, int *width, int  *height);
+void neptuneSetRefreshCallback(NeptuneWindow *window, NeptuneRefreshCallback c);
 
 #endif /* end of include guard: Neptune_h */

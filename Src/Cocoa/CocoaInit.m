@@ -1,5 +1,7 @@
 #ifdef NEPTUNE_COCOA
 
+#include <crt_externs.h>
+
 #include "Internal.h"
 
 // ---------------------------------------------------
@@ -65,6 +67,11 @@ void keyCodeInit(void) {
   _neptune.ns.keyCode[0x07] = NEPTUNE_KEY_X;
   _neptune.ns.keyCode[0x10] = NEPTUNE_KEY_Y;
   _neptune.ns.keyCode[0x06] = NEPTUNE_KEY_Z;
+
+  _neptune.ns.keyCode[0x21] = NEPTUNE_KEY_LEFT_BRACKET;
+  _neptune.ns.keyCode[0x2a] = NEPTUNE_KEY_BACKSLASH;
+  _neptune.ns.keyCode[0x1e] = NEPTUNE_KEY_RIGHT_BRACKET;
+  _neptune.ns.keyCode[0x33] = NEPTUNE_KEY_BACKSPACE;
 }
 
 void createMenuBar(void) {
@@ -74,6 +81,14 @@ void createMenuBar(void) {
   //Get application title
   NSDictionary* plist = [[NSBundle mainBundle] infoDictionary];
   NSString* title = plist[@"CFBundleName"];
+
+  if (!title) {
+    char** temp = _NSGetProgname();
+    if (temp && *temp)
+      title = [NSString stringWithUTF8String:*temp];
+    else
+      title = @"Neptune Application";
+  }
 
   _neptune.ns.menu = [[NSMenu alloc] init];
   [NSApp setMainMenu:_neptune.ns.menu];

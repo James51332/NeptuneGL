@@ -61,7 +61,7 @@ static int translateKey(unsigned short key) {
 
 @implementation NeptuneView
 - (id) init:(NeptuneWindow*)win {
-  self = [super initWithFrame: NSMakeRect(0.0, 0.0, win->width, win->height)];
+//  self = [super initWithFrame: NSMakeRect(0.0, 0.0, win->width, win->height)];
 
   if (self) {
     window = win;

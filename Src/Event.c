@@ -9,11 +9,16 @@
 void _neptuneRequestError(NeptuneError error, const char* msg) {
   _NEPTUNE_REQUIRE_INIT();
 
+  if (_neptune.callbacks.error)
+    _neptune.callbacks.error(error, msg);
+
   switch (error) {
-    case _NEPTUNE_INIT_ERROR:
+    case NEPTUNE_INIT_ERROR:
       printf("NeptuneGL Initialization Error: %s", msg);
-    case _NEPTUNE_PLATFORM_ERROR:
+      break;
+    case NEPTUNE_PLATFORM_ERROR:
       printf("NeptuneGL Platform Error: %s", msg);
+      break;
   }
 }
 

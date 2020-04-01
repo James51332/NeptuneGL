@@ -12,19 +12,40 @@ void platformCreateGLPixelFormat(NeptuneWindow* window) {
   assert(window != NULL);
   _NEPTUNE_REQUIRE_INIT();
 
-  //Credit to
-  //https://developer.apple.com/documentation/appkit/nsopenglpixelformat/1436219-initwithattributes?language=objc
-  //for this simple opengl pixelformat
+  NSOpenGLPixelFormat* pixFmt;
 
-  NSOpenGLPixelFormatAttribute attrs[] =
-  {
+  if (_neptune.hints.glmajor == 4 && _neptune.hints.glminor == 1) {
+
+    NSOpenGLPixelFormatAttribute attrs[] = {
       NSOpenGLPFADoubleBuffer,
       NSOpenGLPFADepthSize, 32,
       NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion4_1Core,
       0
-  };
+    };
 
-  NSOpenGLPixelFormat* pixFmt = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+    pixFmt = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+  }
+
+  if (_neptune.hints.glmajor == 3 && _neptune.hints.glminor == 2) {
+
+    NSOpenGLPixelFormatAttribute attrs[] = {
+      NSOpenGLPFADoubleBuffer,
+      NSOpenGLPFADepthSize, 32,
+      NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
+      0
+    };
+
+    pixFmt = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+  } else {
+
+    NSOpenGLPixelFormatAttribute attrs[] = {
+      NSOpenGLPFADoubleBuffer,
+      NSOpenGLPFADepthSize, 32,
+      0
+    };
+
+    pixFmt = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+  }
 
   window->context.pixelFormat = pixFmt;
 }

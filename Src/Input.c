@@ -6,17 +6,24 @@
 // ---------------------------------------------------
 // ---------------------------------------------------
 
-void _neptuneRequestKey(int key, NeptuneBool state, NeptuneWindow *window) {
+void _neptuneRequestKey(int key, NeptuneKeyState state, NeptuneWindow *window) {
   assert(window != NULL);
   _NEPTUNE_REQUIRE_INIT();
 
   if (key < 0 || key >= 256)
     return;
 
-  window->keys[key] = state;
+  if (state == NEPTUNE_RELEASE)
+    window->keys[key] = state;
+
+  if (window->keys[key] == NEPTUNE_RELEASE)
+    window->keys[key] = state;
+  else
+    window->keys[key] = NEPTUNE_REPEAT;
+
 
   if (window->callbacks.key)
-    window->callbacks.key(window, key, state);
+    window->callbacks.key(window, key, window->keys[key]);
 }
 
 // ---------------------------------------------------
@@ -34,4 +41,8 @@ NEPTUNEAPI NeptuneBool neptuneGetKeyStatus(int key, NeptuneWindow* window) {
     return NEPTUNE_FALSE;
 
   return window->keys[key];
+}
+
+NEPTUNEAPI const char* neptuneGetKeyString(int key) {
+  return _neptune.keyStrings[key];
 }

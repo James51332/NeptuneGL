@@ -24,8 +24,6 @@ $(DEFINES) \
 -I $(PATH)include/ \
 -iquote $(PATH)src/
 
-OBJFILES = $(shell )
-
 .SILENT:
 lib:
 	clang -c $(LIBFILES) $(FLAGS)

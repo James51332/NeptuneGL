@@ -40,12 +40,18 @@ typedef struct _NeptuneLibrary {
 
   NeptuneWindow *windowListHead;
 
+  struct {
+    NeptuneErrorCallback error;
+  } callbacks;
+
   _NEPTUNE_GLOBAL_PLATFORM_CONTEXT;
 
   struct {
-    int major;
-    int minor;
-  } version;
+    int glmajor;
+    int glminor;
+  } hints;
+
+  const char* keyStrings[NEPTUNE_KEY_LAST + 1];
 
 } _NeptuneLibrary;
 
@@ -62,25 +68,17 @@ struct _NeptuneWindow {
   NeptuneBool resizable;
   NeptuneBool shouldClose;
 
-  NeptuneBool *keys;
+  NeptuneKeyState *keys;
 
   struct {
     NeptuneRefreshCallback refresh;
     NeptuneKeyCallback key;
   } callbacks;
 
-  //Platform specific window context (defined in platform header file)
+  //Platform specific window/gl context (defined in platform header file)
   _NEPTUNE_PLATFORM_WINDOW_CONTEXT;
-
-  //Platform specific OpenGL context
   _NEPTUNE_PLATFORM_GL_CONTEXT;
 };
-
-//Private Enums
-typedef enum _NeptuneError {
-  _NEPTUNE_INIT_ERROR,
-  _NEPTUNE_PLATFORM_ERROR,
-} NeptuneError;
 
 // ---------------------------------------------------
 // ---------------------------------------------------
@@ -89,6 +87,7 @@ typedef enum _NeptuneError {
 // ---------------------------------------------------
 
 NeptuneBool                                             platformInit(void);
+void                                                  _neptuneInitGL(void);
 void                                               platformTerminate(void);
 void                           platformCreateWindow(NeptuneWindow *window);
 void                          platformDestroyWindow(NeptuneWindow *window);
@@ -118,13 +117,13 @@ void                         _neptuneRequestRefresh(NeptuneWindow *window);
 
 #define _NEPTUNE_REQUIRE_INIT() \
 if (!_neptune.initialized) { \
-  _neptuneRequestError(_NEPTUNE_INIT_ERROR, "Please Initialize Neptune"); \
+  _neptuneRequestError(NEPTUNE_INIT_ERROR, "Please Initialize Neptune"); \
   return; \
 }
 
 #define _NEPTUNE_REQUIRE_INIT_OR_RETURN(x) \
 if (!_neptune.initialized) { \
-  _neptuneRequestError(_NEPTUNE_INIT_ERROR, "Please Initialize Neptune"); \
+  _neptuneRequestError(NEPTUNE_INIT_ERROR, "Please Initialize Neptune"); \
   return x; \
 }
 
