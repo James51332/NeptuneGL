@@ -75,9 +75,6 @@ void keyCodeInit(void) {
 }
 
 void createMenuBar(void) {
-  //Most of this is directly parellel to glfw.
-  //src/cocoa_init.m
-
   //Get application title
   NSDictionary* plist = [[NSBundle mainBundle] infoDictionary];
   NSString* title = plist[@"CFBundleName"];

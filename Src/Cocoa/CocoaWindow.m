@@ -50,6 +50,7 @@ static int translateKey(unsigned short key) {
   ptr->shouldClose = NEPTUNE_TRUE;
   return NO;
 }
+
 @end
 
 @interface NeptuneView : NSView {
@@ -61,8 +62,6 @@ static int translateKey(unsigned short key) {
 
 @implementation NeptuneView
 - (id) init:(NeptuneWindow*)win {
-//  self = [super initWithFrame: NSMakeRect(0.0, 0.0, win->width, win->height)];
-
   if (self) {
     window = win;
   }
@@ -82,6 +81,22 @@ static int translateKey(unsigned short key) {
 
 - (BOOL) canBecomeKeyView {
   return YES;
+}
+
+- (void)mouseDown:(NSEvent *)event {
+  _neptuneRequestMouseButton(window, NEPTUNE_MOUSE_LEFT, NEPTUNE_PRESS);
+}
+
+- (void)mouseUp:(NSEvent *)event {
+  _neptuneRequestMouseButton(window, NEPTUNE_MOUSE_LEFT, NEPTUNE_RELEASE);
+}
+
+- (void)mouseMoved:(NSEvent *)event {
+
+}
+
+- (void)mouseDragged:(NSEvent *)event {
+  [self mouseMoved:event];
 }
 
 - (void)keyDown:(NSEvent *)event {
@@ -116,7 +131,9 @@ static int translateKey(unsigned short key) {
 // ---------------------------------------------------
 
 void platformCreateWindow(NeptuneWindow* window) {
-    NSRect frame = NSMakeRect(0.0, 0.0, window->width, window->height);
+    NSRect frame = NSMakeRect(0.0, 0.0, window->initwidth, window->initheight);
+    window->initwidth = 0;
+    window->initheight = 0;
 
     window->ns.object = [[NeptuneCocoaWindow alloc] initWithContentRect: frame
                                                               styleMask: getStyleMask(window)
@@ -125,7 +142,7 @@ void platformCreateWindow(NeptuneWindow* window) {
 
     window->ns.delegate = [[NeptuneWindowDelegate alloc] init: window];
 
-    [(NeptuneCocoaWindow*)window->ns.object center];
+    [(NeptuneCocoaWindow *)window->ns.object center];
 
     if (window->title)
       [window->ns.object setTitle: [NSString stringWithUTF8String: window->title]];
@@ -140,9 +157,8 @@ void platformCreateWindow(NeptuneWindow* window) {
 
     platformCreateGLContext(window);
 
-    //OSX requires us to update the application in order to display the window
+    //macOS requires us to update the application in order to display the window
     neptunePollEvents();
-
 }
 
 void platformDestroyWindow(NeptuneWindow* window) {
@@ -157,6 +173,20 @@ void platformDestroyWindow(NeptuneWindow* window) {
   [window->ns.object close];
   [window->ns.object release];
   window->ns.object = nil;
+}
+
+void platformGetWindowSize(NeptuneWindow *window, int *width, int *height) {
+  @autoreleasepool {
+
+  NSRect frame = [window->ns.view frame];
+
+  if (width)
+    *width = frame.size.width;
+
+  if (height)
+    *height = frame.size.height;
+
+  }
 }
 
 #endif

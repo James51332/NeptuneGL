@@ -1,37 +1,51 @@
-#ifndef Neptune_h
-#define Neptune_h
+#ifndef NeptuneGL_h
+#define NeptuneGL_h
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 #define NEPTUNE_TRUE 1
 #define NEPTUNE_FALSE 0
 
 #ifdef NEPTUNE_COCOA
-  #include <OpenGL/gl.h>
+#include <OpenGL/gl.h>
 #endif
 
-typedef int NeptuneBool;
-typedef int NeptuneKeyState;
+  typedef int NeptuneBool;
+  typedef int NeptuneKeyState;
+  typedef int NeptuneButtonState;
 
-typedef struct _NeptuneWindow NeptuneWindow;
+  typedef struct _NeptuneWindow NeptuneWindow;
 
-typedef void(*NeptuneRefreshCallback)(NeptuneWindow* window);
-typedef void(*NeptuneKeyCallback)(NeptuneWindow* window, int key, NeptuneBool state);
-typedef void(*NeptuneMouseCallback)(NeptuneWindow* window, int key, NeptuneBool state);
+  typedef enum _NeptuneError
+  {
+    NEPTUNE_INIT_ERROR,
+    NEPTUNE_PLATFORM_ERROR,
+  } NeptuneError;
 
-typedef enum _NeptuneError {
-  NEPTUNE_INIT_ERROR,
-  NEPTUNE_PLATFORM_ERROR,
-} NeptuneError;
+  typedef enum _NeptuneWindowHint
+  {
+    NEPTUNE_OPENGL_VERSION_MAJOR,
+    NEPTUNE_OPENGL_VERSION_MINOR
+  } NeptuneWindowHint;
 
-typedef void(*NeptuneErrorCallback)(NeptuneError error, const char* msg);
-
-typedef enum _NeptuneWindowHint {
-  NEPTUNE_OPENGL_VERSION_MAJOR,
-  NEPTUNE_OPENGL_VERSION_MINOR
-} NeptuneWindowHint;
+  typedef void (*NeptuneRefreshCallback)(NeptuneWindow *window);
+  typedef void (*NeptuneKeyCallback)(NeptuneWindow *window, int key, NeptuneKeyState state);
+  typedef void (*NeptuneMouseButtonCallback)(NeptuneWindow *window, int button, NeptuneButtonState state);
+  typedef void (*NeptuneCloseCallback)(NeptuneWindow *window);
+  typedef void (*NeptuneResizeCallback)(NeptuneWindow *window, int width, int height);
+  typedef void (*NeptuneErrorCallback)(NeptuneError error, const char *msg);
 
 #define NEPTUNE_PRESS 1
 #define NEPTUNE_RELEASE 0
 #define NEPTUNE_REPEAT 2
+
+#define NEPTUNE_MOUSE_LEFT 1
+#define NEPTUNE_MOUSE_RIGHT 2
+
+#define NEPTUNE_MOUSE_LAST NEPTUNE_MOUSE_RIGHT
 
 #define NEPTUNE_KEY_UNKNOWN -1
 
@@ -108,26 +122,33 @@ typedef enum _NeptuneWindowHint {
 
 #define NEPTUNE_KEY_LAST NEPTUNE_KEY_BACKSPACE
 
-// ---------------------------------------------------
-// ---------------------------------------------------
-// ----------      NEPTUNE PUBLIC API       ----------
-// ---------------------------------------------------
-// ---------------------------------------------------
+  // ---------------------------------------------------
+  // ---------------------------------------------------
+  // ----------      NEPTUNE PUBLIC API       ----------
+  // ---------------------------------------------------
+  // ---------------------------------------------------
 
-int                                                           neptuneInit(void);
-void                                                     neptuneTerminate(void);
-void                                                    neptunePollEvents(void);
-const char*                                        neptuneGetKeyString(int key);
-void                                             neptuneDestroyAllWindows(void);
-void                                  neptuneSwapBuffers(NeptuneWindow *window);
-void                                neptuneDestroyWindow(NeptuneWindow *window);
-NeptuneBool                     neptuneWindowShouldClose(NeptuneWindow *window);
-void                           neptuneMakeContextCurrent(NeptuneWindow *window);
-void                         neptuneWindowHint(NeptuneWindowHint type, int val);
-NeptuneBool                 neptuneGetKeyStatus(int key, NeptuneWindow *window);
-NeptuneWindow*    neptuneCreateWindow(int width, int height, const char *title);
-void         neptuneSetKeyCallback(NeptuneWindow *window, NeptuneKeyCallback c);
-void      neptuneGetWindowSize(NeptuneWindow *window, int *width, int  *height);
-void neptuneSetRefreshCallback(NeptuneWindow *window, NeptuneRefreshCallback c);
+  int neptuneInit(void);
+  void neptuneTerminate(void);
+  void neptunePollEvents(void);
+  const char *neptuneGetKeyString(int key);
+  void neptuneDestroyAllWindows(void);
+  void neptuneSetWindowWrapperPtr(NeptuneWindow *window, void *ptr);
+  void *neptuneGetWindowWrapperPtr(NeptuneWindow *window);
+  void neptuneSwapBuffers(NeptuneWindow *window);
+  void neptuneDestroyWindow(NeptuneWindow *window);
+  NeptuneBool neptuneWindowShouldClose(NeptuneWindow *window);
+  void neptuneMakeContextCurrent(NeptuneWindow *window);
+  void neptuneWindowHint(NeptuneWindowHint type, int val);
+  NeptuneBool neptuneGetKeyStatus(int key, NeptuneWindow *window);
+  NeptuneWindow *neptuneCreateWindow(int width, int height, const char *title);
+  void neptuneSetKeyCallback(NeptuneWindow *window, NeptuneKeyCallback callback);
+  void neptuneGetWindowSize(NeptuneWindow *window, int *width, int *height);
+  void neptuneSetRefreshCallback(NeptuneWindow *window, NeptuneRefreshCallback callback);
+  void neptuneSetCloseCallback(NeptuneWindow *window, NeptuneCloseCallback callback);
 
-#endif /* end of include guard: Neptune_h */
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* end of include guard: NeptuneGL_h */

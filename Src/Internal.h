@@ -9,18 +9,18 @@
 
 //Cocoa ID Translation
 #ifdef __OBJC__
-  #include <Cocoa/Cocoa.h>
+#include <Cocoa/Cocoa.h>
 #else
-  typedef void* id;
+typedef void *id;
 #endif
 
 //Platform Includes
 #ifdef NEPTUNE_COCOA
 
 #ifdef NEPTUNE_DYNAMIC
-  #define NEPTUNEAPI __attribute__((visibility("default")))
+#define NEPTUNEAPI __attribute__((visibility("default")))
 #else
-  #define NEPTUNEAPI
+#define NEPTUNEAPI
 #endif
 
 #include "Cocoa/CocoaPlatform.h"
@@ -35,34 +35,40 @@
 #include "../Include/Neptune/Neptune.h"
 
 //Global for information about the library
-typedef struct _NeptuneLibrary {
+typedef struct _NeptuneLibrary
+{
   NeptuneBool initialized;
 
   NeptuneWindow *windowListHead;
 
-  struct {
+  struct
+  {
     NeptuneErrorCallback error;
   } callbacks;
 
   _NEPTUNE_GLOBAL_PLATFORM_CONTEXT;
 
-  struct {
+  struct
+  {
     int glmajor;
     int glminor;
   } hints;
 
-  const char* keyStrings[NEPTUNE_KEY_LAST + 1];
+  const char *keyStrings[NEPTUNE_KEY_LAST + 1];
 
 } _NeptuneLibrary;
 
 extern _NeptuneLibrary _neptune;
 
 //Private Structs
-struct _NeptuneWindow {
+struct _NeptuneWindow
+{
   struct _NeptuneWindow *next;
 
-  int width;
-  int height;
+  void *wrapperPtr;
+
+  int initwidth;
+  int initheight;
   const char *title;
 
   NeptuneBool resizable;
@@ -70,9 +76,14 @@ struct _NeptuneWindow {
 
   NeptuneKeyState *keys;
 
-  struct {
+  NeptuneButtonState *mouse;
+
+  struct
+  {
     NeptuneRefreshCallback refresh;
     NeptuneKeyCallback key;
+    NeptuneCloseCallback close;
+    NeptuneMouseButtonCallback mouseButton;
   } callbacks;
 
   //Platform specific window/gl context (defined in platform header file)
@@ -86,16 +97,17 @@ struct _NeptuneWindow {
 // ---------------------------------------------------
 // ---------------------------------------------------
 
-NeptuneBool                                             platformInit(void);
-void                                                  _neptuneInitGL(void);
-void                                               platformTerminate(void);
-void                           platformCreateWindow(NeptuneWindow *window);
-void                          platformDestroyWindow(NeptuneWindow *window);
-void                    platformCreateGLPixelFormat(NeptuneWindow *window);
-void                        platformCreateGLContext(NeptuneWindow *window);
-void                     platformMakeContextCurrent(NeptuneWindow *window);
-void                            platformSwapBuffers(NeptuneWindow *window);
-void                                              platformPollEvents(void);
+NeptuneBool platformInit(void);
+void _neptuneInitGL(void);
+void platformTerminate(void);
+void platformGetWindowSize(NeptuneWindow *window, int *width, int *height);
+void platformCreateWindow(NeptuneWindow *window);
+void platformDestroyWindow(NeptuneWindow *window);
+void platformCreateGLPixelFormat(NeptuneWindow *window);
+void platformCreateGLContext(NeptuneWindow *window);
+void platformMakeContextCurrent(NeptuneWindow *window);
+void platformSwapBuffers(NeptuneWindow *window);
+void platformPollEvents(void);
 
 // ---------------------------------------------------
 // ---------------------------------------------------
@@ -103,28 +115,33 @@ void                                              platformPollEvents(void);
 // ---------------------------------------------------
 // ---------------------------------------------------
 
-void             _neptuneRequestError(NeptuneError error, const char* msg);
-void  _neptuneRequestKey(int key, NeptuneBool down, NeptuneWindow *window);
-void                         _neptuneRequestRefresh(NeptuneWindow *window);
+void _neptuneRequestError(NeptuneError error, const char *msg);
+void _neptuneRequestKey(int key, NeptuneKeyState down, NeptuneWindow *window);
+void _neptuneRequestRefresh(NeptuneWindow *window);
+void _neptuneRequestClose(NeptuneWindow *window);
+void _neptuneRequestResize(NeptuneWindow *window, int width, int height);
+void _neptuneRequestMouseButton(NeptuneWindow *window, int button, NeptuneButtonState state);
 
 #define _NEPTUNE_SWAP_POINTERS(x, y) \
-{ \
-  void *a; \
-  a = x; \
-  x = y; \
-  y = a; \
-}
+  {                                  \
+    void *a;                         \
+    a = x;                           \
+    x = y;                           \
+    y = a;                           \
+  }
 
-#define _NEPTUNE_REQUIRE_INIT() \
-if (!_neptune.initialized) { \
-  _neptuneRequestError(NEPTUNE_INIT_ERROR, "Please Initialize Neptune"); \
-  return; \
-}
+#define _NEPTUNE_REQUIRE_INIT()                                            \
+  if (!_neptune.initialized)                                               \
+  {                                                                        \
+    _neptuneRequestError(NEPTUNE_INIT_ERROR, "Please Initialize Neptune"); \
+    return;                                                                \
+  }
 
-#define _NEPTUNE_REQUIRE_INIT_OR_RETURN(x) \
-if (!_neptune.initialized) { \
-  _neptuneRequestError(NEPTUNE_INIT_ERROR, "Please Initialize Neptune"); \
-  return x; \
-}
+#define _NEPTUNE_REQUIRE_INIT_OR_RETURN(x)                                 \
+  if (!_neptune.initialized)                                               \
+  {                                                                        \
+    _neptuneRequestError(NEPTUNE_INIT_ERROR, "Please Initialize Neptune"); \
+    return x;                                                              \
+  }
 
 #endif /* end of include guard: Internal_h */

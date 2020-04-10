@@ -8,12 +8,14 @@
 // ---------------------------------------------------
 // ---------------------------------------------------
 
-void defaultWindowHints(void) {
+void defaultWindowHints(void)
+{
   _neptune.hints.glmajor = 1;
   _neptune.hints.glminor = 0;
 }
 
-void initKeyStrings(void) {
+void initKeyStrings(void)
+{
   _neptune.keyStrings[NEPTUNE_KEY_TAB] = "Tab";
   _neptune.keyStrings[NEPTUNE_KEY_LEFT_SHIFT] = "Left Shift";
   _neptune.keyStrings[NEPTUNE_KEY_RIGHT_SHIFT] = "Right Shift";
@@ -85,18 +87,24 @@ void initKeyStrings(void) {
 // ---------------------------------------------------
 // ---------------------------------------------------
 
-NEPTUNEAPI void neptuneWindowHint(NeptuneWindowHint hint, int val) {
-  switch (hint) {
-    case NEPTUNE_OPENGL_VERSION_MAJOR:
-      _neptune.hints.glmajor = val;
-      break;
-    case NEPTUNE_OPENGL_VERSION_MINOR:
-      _neptune.hints.glminor = val;
-      break;
+NEPTUNEAPI void neptuneWindowHint(NeptuneWindowHint hint, int val)
+{
+  switch (hint)
+  {
+  case NEPTUNE_OPENGL_VERSION_MAJOR:
+    _neptune.hints.glmajor = val;
+    break;
+  case NEPTUNE_OPENGL_VERSION_MINOR:
+    _neptune.hints.glminor = val;
+    break;
   }
 }
 
-NEPTUNEAPI int neptuneInit(void) {
+NEPTUNEAPI int neptuneInit(void)
+{
+  if (_neptune.initialized)
+    return NEPTUNE_TRUE;
+
   if (platformInit())
     _neptune.initialized = NEPTUNE_TRUE;
 
@@ -109,7 +117,8 @@ NEPTUNEAPI int neptuneInit(void) {
   return _neptune.initialized;
 }
 
-NEPTUNEAPI void neptuneTerminate(void) {
+NEPTUNEAPI void neptuneTerminate(void)
+{
   _NEPTUNE_REQUIRE_INIT();
 
   if (_neptune.windowListHead != NULL)

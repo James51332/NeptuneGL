@@ -6,16 +6,18 @@
 // ---------------------------------------------------
 // ---------------------------------------------------
 
-void insertWindowIntoGlobalList(NeptuneWindow* window) {
-  if (_neptune.windowListHead == NULL) {
+void insertWindowIntoGlobalList(NeptuneWindow *window)
+{
+  if (_neptune.windowListHead == NULL)
+  {
     _neptune.windowListHead = window;
     return;
   }
 
-  NeptuneWindow* tracer = _neptune.windowListHead;
-  while (tracer -> next != NULL)
-    tracer = tracer -> next;
-  tracer -> next = window;
+  NeptuneWindow *tracer = _neptune.windowListHead;
+  while (tracer->next != NULL)
+    tracer = tracer->next;
+  tracer->next = window;
 }
 
 // ---------------------------------------------------
@@ -24,8 +26,8 @@ void insertWindowIntoGlobalList(NeptuneWindow* window) {
 // ---------------------------------------------------
 // ---------------------------------------------------
 
-
-NEPTUNEAPI NeptuneWindow* neptuneCreateWindow(int width, int height, const char* title) {
+NEPTUNEAPI NeptuneWindow *neptuneCreateWindow(int width, int height, const char *title)
+{
 
   assert(title != NULL);
   assert(width >= 0);
@@ -33,19 +35,22 @@ NEPTUNEAPI NeptuneWindow* neptuneCreateWindow(int width, int height, const char*
 
   _NEPTUNE_REQUIRE_INIT_OR_RETURN(NULL);
 
-  NeptuneWindow* window = (NeptuneWindow*) malloc(sizeof(NeptuneWindow));
+  NeptuneWindow *window = (NeptuneWindow *)malloc(sizeof(NeptuneWindow));
 
   window->next = NULL;
 
-  window->width = width;
-  window->height = height;
+  window->initwidth = width;
+  window->initheight = height;
   window->title = title;
 
   window->resizable = NEPTUNE_TRUE;
   window->shouldClose = NEPTUNE_FALSE;
 
-  window->keys = (int *) malloc((NEPTUNE_KEY_LAST + 1) * sizeof(NeptuneBool));
+  window->keys = (NeptuneKeyState *)malloc((NEPTUNE_KEY_LAST + 1) * sizeof(NeptuneKeyState));
   memset(window->keys, NEPTUNE_RELEASE, NEPTUNE_KEY_LAST + 1);
+
+  window->mouse = (NeptuneButtonState *)malloc((NEPTUNE_MOUSE_LAST + 1) * sizeof(NeptuneButtonState));
+  memset(window->mouse, NEPTUNE_RELEASE, NEPTUNE_MOUSE_LAST + 1);
 
   memset(&window->callbacks, 0, sizeof(window->callbacks));
 
@@ -56,7 +61,8 @@ NEPTUNEAPI NeptuneWindow* neptuneCreateWindow(int width, int height, const char*
   return window;
 }
 
-NEPTUNEAPI void neptuneDestroyWindow(NeptuneWindow* window) {
+NEPTUNEAPI void neptuneDestroyWindow(NeptuneWindow *window)
+{
 
   assert(window != NULL);
 
@@ -65,22 +71,25 @@ NEPTUNEAPI void neptuneDestroyWindow(NeptuneWindow* window) {
   platformDestroyWindow(window);
 }
 
-NEPTUNEAPI void neptuneDestroyAllWindows() {
+NEPTUNEAPI void neptuneDestroyAllWindows()
+{
 
   _NEPTUNE_REQUIRE_INIT();
 
   if (_neptune.windowListHead == NULL)
     return;
 
-  while (_neptune.windowListHead != NULL) {
-    NeptuneWindow *pointer = _neptune.windowListHead -> next;
+  while (_neptune.windowListHead != NULL)
+  {
+    NeptuneWindow *pointer = _neptune.windowListHead->next;
     neptuneDestroyWindow(_neptune.windowListHead);
     free(_neptune.windowListHead);
     _neptune.windowListHead = pointer;
   }
 }
 
-NEPTUNEAPI NeptuneBool neptuneWindowShouldClose(NeptuneWindow* window) {
+NEPTUNEAPI NeptuneBool neptuneWindowShouldClose(NeptuneWindow *window)
+{
 
   assert(window != NULL);
 
@@ -92,20 +101,33 @@ NEPTUNEAPI NeptuneBool neptuneWindowShouldClose(NeptuneWindow* window) {
     return NEPTUNE_FALSE;
 }
 
+NEPTUNEAPI void neptuneSetWindowWrapperPtr(NeptuneWindow *window, void *ptr)
+{
+  assert(window != NULL);
+  _NEPTUNE_REQUIRE_INIT();
+
+  window->wrapperPtr = ptr;
+}
+
+NEPTUNEAPI void *neptuneGetWindowWrapperPtr(NeptuneWindow *window)
+{
+  assert(window != NULL);
+  _NEPTUNE_REQUIRE_INIT_OR_RETURN(NULL);
+
+  return window->wrapperPtr;
+}
+
 // ---------------------------------------------------
 // ---------------------------------------------------
 // ----------      NEPTUNE GETTER API       ----------
 // ---------------------------------------------------
 // ---------------------------------------------------
 
-NEPTUNEAPI void neptuneGetWindowSize(NeptuneWindow* window, int* width, int* height) {
+NEPTUNEAPI void neptuneGetWindowSize(NeptuneWindow *window, int *width, int *height)
+{
   assert(window != NULL);
 
   _NEPTUNE_REQUIRE_INIT();
 
-  if (width != NULL)
-    width = &window->width;
-
-  if (height != NULL)
-    height = &window->height;
+  platformGetWindowSize(window, width, height);
 }
