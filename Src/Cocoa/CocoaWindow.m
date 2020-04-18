@@ -34,20 +34,20 @@ static int translateKey(unsigned short key) {
 // ---------------------------------------------------
 
 @interface NeptuneWindowDelegate : NSObject <NSWindowDelegate> {
-  NeptuneWindow* ptr;
+  NeptuneWindow* window;
 }
-- (id) init:(NeptuneWindow*)window;
+- (id) init:(NeptuneWindow*)handle;
 @end
 
 @implementation NeptuneWindowDelegate
-- (id) init:(NeptuneWindow*)window {
-  ptr = window;
-
+- (id) init:(NeptuneWindow*)handle {
+  window = handle;
   return self;
 }
 
-- (BOOL) windowShouldClose:(NSWindow*)window {
-  ptr->shouldClose = NEPTUNE_TRUE;
+- (BOOL) windowShouldClose:(NSWindow*)win {
+  _neptuneRequestClose(window);
+
   return NO;
 }
 
@@ -92,7 +92,7 @@ static int translateKey(unsigned short key) {
 }
 
 - (void)mouseMoved:(NSEvent *)event {
-
+  
 }
 
 - (void)mouseDragged:(NSEvent *)event {

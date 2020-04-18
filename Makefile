@@ -39,7 +39,7 @@ EXAMFLAGS =\
 -D GL_SILENCE_DEPRECATION
 
 example:
-	clang Examples/$(EXAMPLE).c Bin/Neptune.a $(EXAMFLAGS)
+	clang++ Examples/$(EXAMPLE).cpp Bin/Neptune.a $(EXAMFLAGS)
 
 VERSION=0.0.0
 NAME = NeptuneGL-$(VERSION)

@@ -24,9 +24,7 @@ void platformCreateGLPixelFormat(NeptuneWindow* window) {
     };
 
     pixFmt = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
-  }
-
-  if (_neptune.hints.glmajor == 3 && _neptune.hints.glminor == 2) {
+  } else if (_neptune.hints.glmajor == 3 && _neptune.hints.glminor == 2) {
 
     NSOpenGLPixelFormatAttribute attrs[] = {
       NSOpenGLPFADoubleBuffer,

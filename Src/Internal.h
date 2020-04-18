@@ -77,6 +77,7 @@ struct _NeptuneWindow
   NeptuneKeyState *keys;
 
   NeptuneButtonState *mouse;
+  float mouseX, mouseY;
 
   struct
   {
